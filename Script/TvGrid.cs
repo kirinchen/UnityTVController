@@ -1,16 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+
 namespace TVController {
-    public class TvGrid : MonoBehaviour {
+    public abstract class TvGrid : MonoBehaviour {
 
-        // Use this for initialization
-        void Start() {
 
-        }
-
-        // Update is called once per frame
-        void Update() {
-
-        }
+        public abstract void showSelected(bool b);
     }
 }

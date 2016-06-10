@@ -17,10 +17,19 @@ namespace TVController {
 
         public TVBehaviour getByDirection(Direction d) {
             if (onDirection(d)) {
-                return getNextTVBehaviourByDirection(d);
+                TVBehaviour ans = getNextTVBehaviourByDirection(d);
+                if (ans == null) {
+                    return findCustomTVBehaviour();
+                } else {
+                    return ans;
+                }
             } else {
                 return null;
             }
+        }
+
+        public virtual TVBehaviour findCustomTVBehaviour() {
+            return null;
         }
 
         public abstract bool onDirection(Direction d);

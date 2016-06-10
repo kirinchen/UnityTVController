@@ -6,6 +6,7 @@ namespace TVController {
     public class TVSystem : MonoBehaviour {
 
         public TVBehaviour currentItem;
+        private bool _moveing = false;
 
         void Start() {
             currentItem.focus(true);
@@ -14,15 +15,20 @@ namespace TVController {
         void Update() {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
-            move(moveHorizontal,moveVertical);
+            move(moveHorizontal, moveVertical);
         }
 
-        private void move(float h,float v) {
+        private void move(float h, float v) {
             if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0) {
-                TVBehaviour nextF = currentItem.getByDirection(getDirection(h,v));
-                if (nextF != null) {
-                    changeFocus(nextF);
+                if (!_moveing) {
+                    _moveing = true;
+                    TVBehaviour nextF = currentItem.getByDirection(getDirection(h, v));
+                    if (nextF != null) {
+                        changeFocus(nextF);
+                    }
                 }
+            } else {
+                _moveing = false;
             }
         }
 
@@ -35,10 +41,10 @@ namespace TVController {
         }
 
         internal void changeFocus(TVBehaviour nextF) {
-            currentItem.onLeaveFocus(()=> {
+            currentItem.onLeaveFocus(() => {
                 currentItem.focus(false);
             });
-            nextF.onFocus(()=> {
+            nextF.onFocus(() => {
                 nextF.focus(true);
             });
             currentItem = nextF;
