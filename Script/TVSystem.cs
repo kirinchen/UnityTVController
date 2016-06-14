@@ -9,13 +9,22 @@ namespace TVController {
         private bool _moveing = false;
 
         void Start() {
-            currentItem.focus(true);
+            setInitTvView();
+        }
+
+        public void setInitTvView(TVBehaviour t = null) {
+            currentItem = t == null ? currentItem : t;
+            if (currentItem != null) {
+                currentItem.focus(true);
+            }
         }
 
         void Update() {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-            move(moveHorizontal, moveVertical);
+            if (currentItem != null) {
+                float moveHorizontal = Input.GetAxis("Horizontal");
+                float moveVertical = Input.GetAxis("Vertical");
+                move(moveHorizontal, moveVertical);
+            }
         }
 
         private void move(float h, float v) {

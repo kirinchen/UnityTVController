@@ -7,7 +7,8 @@ using System.Collections.Generic;
 namespace TVController {
     [RequireComponent(typeof(GridLayoutGroup))]
     public class TvGridGroup : TVBehaviour {
-        public bool endRepeatable = true;
+        public bool horizontalEndRepeatable = true;
+        public bool verticalEndRepeatable = true;
         private GridLayoutGroup gridLayout;
         private RectTransform rectTram;
         public int horizontalCount {
@@ -16,13 +17,20 @@ namespace TVController {
         private List<TvGrid[]> gridMtx = new List<TvGrid[]>();
         private GridLoc currentIndex = GridLoc.zero();
 
-        new void Awake() {
+        new public void Awake() {
+            base.Awake();
             gridLayout = GetComponent<GridLayoutGroup>();
             rectTram = GetComponent<RectTransform>();
         }
 
-        void Start() {
+        new public void Start() {
             loadGrids();
+        }
+
+        internal override void focus(bool b) {
+            currentIndex = GridLoc.zero();
+            base.focus(b);
+            showCurrentSelected(true);
         }
 
         public void loadGrids() {
@@ -53,13 +61,20 @@ namespace TVController {
                 moveSelect(d);
                 return false;
             } catch (Exception e) {
-                if (endRepeatable) {
+                if (!DirectionF.i(d).isVertical() && horizontalEndRepeatable) {
+                    handleRepeatEnd(d);
+                    return false;
+                } else if (DirectionF.i(d).isVertical() && verticalEndRepeatable) {
                     handleRepeatEnd(d);
                     return false;
                 } else {
-                    return true;
+                    return handleOther(d, currentIndex) ;
                 }
             }
+        }
+
+        internal virtual bool handleOther(Direction d, GridLoc currentIndex) {
+            return true;
         }
 
         private void handleRepeatEnd(Direction d) {
@@ -103,13 +118,14 @@ namespace TVController {
             }
         }
 
-        private void showCurrentSelected(bool s) {
+        internal void showCurrentSelected(bool s) {
             get(currentIndex).showSelected(s);
         }
 
         private TvGrid get(GridLoc v) {
             return gridMtx[v.y][v.x];
         }
+
 
     }
 }

@@ -4,14 +4,18 @@ using System;
 using System.Collections.Generic;
 
 namespace TVController {
-    public abstract  class TVBehaviour : MonoBehaviour {
+    public abstract class TVBehaviour : MonoBehaviour {
         private TVSystem tvSys;
         public TVBehaviour top, bottom, left, right;
         private bool focused = false;
         public Dictionary<string, TVBehaviour> tb;
+        public Func<Direction, TVBehaviour> findCustomTVBehaviour = (d) => { return null; };
 
         public void Awake() {
             tvSys = FindObjectOfType<TVSystem>();
+        }
+
+        public void Start() {
             focus(false);
         }
 
@@ -19,7 +23,7 @@ namespace TVController {
             if (onDirection(d)) {
                 TVBehaviour ans = getNextTVBehaviourByDirection(d);
                 if (ans == null) {
-                    return findCustomTVBehaviour();
+                    return findCustomTVBehaviour(d);
                 } else {
                     return ans;
                 }
@@ -28,13 +32,10 @@ namespace TVController {
             }
         }
 
-        public virtual TVBehaviour findCustomTVBehaviour() {
-            return null;
-        }
 
         public abstract bool onDirection(Direction d);
 
-        public virtual TVBehaviour getNextTVBehaviourByDirection(Direction d) {
+        public TVBehaviour getNextTVBehaviourByDirection(Direction d) {
             switch (d) {
                 case Direction.Up:
                     return top;
@@ -45,7 +46,7 @@ namespace TVController {
                 case Direction.Right:
                     return right;
             }
-            throw new Exception("it`s imposible d="+d);
+            throw new Exception("it`s imposible d=" + d);
 
         }
 
