@@ -21,4 +21,7 @@ public class TestTvView : TVBehaviour {
     public override bool onDirection(Direction d) {
         return true;
     }
+
+    public override void click() {
+    }
 }

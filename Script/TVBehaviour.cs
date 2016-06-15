@@ -15,9 +15,7 @@ namespace TVController {
             tvSys = FindObjectOfType<TVSystem>();
         }
 
-        public void Start() {
-            focus(false);
-        }
+
 
         public TVBehaviour getByDirection(Direction d) {
             if (onDirection(d)) {
@@ -32,6 +30,7 @@ namespace TVController {
             }
         }
 
+        public abstract void click();
 
         public abstract bool onDirection(Direction d);
 

@@ -32,7 +32,7 @@ public class ViewPagerGridGroup : TvGridGroup {
         }
     }
 
-    internal override bool handleOther(Direction d, GridLoc currentIndex) {
+    internal override bool handleOther(Direction d,  GridLoc orGLoc, GridLoc currentIndex) {
         if (d == Direction.Right) {
             int c = viewpager.getCount();
             if (viewpager.currentIndex >= c-1) {
@@ -40,6 +40,7 @@ public class ViewPagerGridGroup : TvGridGroup {
                 showCurrentSelected(true);
                 return false;
             } else {
+                base.handleOther(d,orGLoc,currentIndex);
                 return true;
             }
         } else {
@@ -48,6 +49,7 @@ public class ViewPagerGridGroup : TvGridGroup {
                 showCurrentSelected(true);
                 return false;
             } else {
+                base.handleOther(d, orGLoc, currentIndex);
                 return true;
             }
         }

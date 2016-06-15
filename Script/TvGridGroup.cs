@@ -27,11 +27,10 @@ namespace TVController {
             loadGrids();
         }
 
-        internal override void focus(bool b) {
-            currentIndex = GridLoc.zero();
+        /*internal override void focus(bool b) {
             base.focus(b);
             showCurrentSelected(true);
-        }
+        }*/
 
         public void loadGrids() {
             horizontalCount = getRowCount();
@@ -57,6 +56,7 @@ namespace TVController {
         }
 
         public override bool onDirection(Direction d) {
+            GridLoc orGLoc = currentIndex.clone();
             try {
                 moveSelect(d);
                 return false;
@@ -68,12 +68,14 @@ namespace TVController {
                     handleRepeatEnd(d);
                     return false;
                 } else {
-                    return handleOther(d, currentIndex) ;
+                    return handleOther(d, orGLoc, currentIndex) ;
                 }
             }
         }
 
-        internal virtual bool handleOther(Direction d, GridLoc currentIndex) {
+        internal virtual bool handleOther(Direction d, GridLoc orGLoc, GridLoc _currentIndex) {
+            currentIndex = orGLoc.clone();
+            showCurrentSelected(true);
             return true;
         }
 
@@ -101,6 +103,12 @@ namespace TVController {
             showCurrentSelected(true);
         }
 
+        public void setCurrentSelected(GridLoc loc) {
+            showCurrentSelected(false);
+            currentIndex = loc;
+            showCurrentSelected(true);
+        }
+
         private void shift(Direction d) {
             switch (d) {
                 case Direction.Down:
@@ -122,10 +130,16 @@ namespace TVController {
             get(currentIndex).showSelected(s);
         }
 
-        private TvGrid get(GridLoc v) {
+        public TvGrid get(GridLoc v) {
             return gridMtx[v.y][v.x];
         }
 
+        public GridLoc getSize() {
+            return new GridLoc(gridMtx[0].Length, gridMtx.Count);
+        }
 
+        public override void click() {
+            get(currentIndex).click();
+        }
     }
 }

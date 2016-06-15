@@ -7,5 +7,7 @@ namespace TVController {
 
 
         public abstract void showSelected(bool b);
+
+        public abstract void click();
     }
 }

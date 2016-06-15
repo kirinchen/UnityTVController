@@ -16,4 +16,6 @@ public class TestTvGrid : TvGrid {
         img.color = b ? Color.green : Color.blue;
     }
 
+    public override void click() {
+    }
 }

@@ -15,7 +15,14 @@ namespace TVController {
         public void setInitTvView(TVBehaviour t = null) {
             currentItem = t == null ? currentItem : t;
             if (currentItem != null) {
+                setAllUnFocus();
                 currentItem.focus(true);
+            }
+        }
+
+        private void setAllUnFocus() {
+            foreach (TVBehaviour b in FindObjectsOfType<TVBehaviour>()) {
+                b.focus(false);
             }
         }
 
@@ -24,6 +31,10 @@ namespace TVController {
                 float moveHorizontal = Input.GetAxis("Horizontal");
                 float moveVertical = Input.GetAxis("Vertical");
                 move(moveHorizontal, moveVertical);
+                if (Input.GetKeyUp(KeyCode.G)) {
+                    currentItem.click();
+                }
+
             }
         }
 
