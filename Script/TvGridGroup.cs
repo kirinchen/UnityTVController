@@ -9,47 +9,68 @@ namespace TVController {
     public class TvGridGroup : TVBehaviour {
         public bool horizontalEndRepeatable = true;
         public bool verticalEndRepeatable = true;
+        public bool defaultSelected = true;
         private GridLayoutGroup gridLayout;
         private RectTransform rectTram;
         public int horizontalCount {
-            get;private set;
+            get; private set;
         }
-        private List<TvGrid[]> gridMtx = new List<TvGrid[]>();
-        private GridLoc currentIndex = GridLoc.zero();
+        private List<List<TvGrid>> gridMtx = new List<List<TvGrid>>();
+        public GridLoc currentIndex {
+            get; private set;
+        }
 
         new public void Awake() {
             base.Awake();
+            currentIndex = GridLoc.zero();
             gridLayout = GetComponent<GridLayoutGroup>();
             rectTram = GetComponent<RectTransform>();
         }
 
-        new public void Start() {
+        public void Start() {
             loadGrids();
+            if (defaultSelected) {
+                showCurrentSelected(true);
+            }
         }
 
         /*internal override void focus(bool b) {
             base.focus(b);
-            showCurrentSelected(true);
+            try {
+                showCurrentSelected(true);
+            } catch (Exception e) {
+            }
         }*/
+
+        internal override void onFocus(Action focusAction) {
+            base.onFocus(focusAction);
+            try {
+                showCurrentSelected(true);
+            } catch (Exception e) {
+            }
+        }
 
         public void loadGrids() {
             horizontalCount = getRowCount();
             TvGrid[] tgs = GetComponentsInChildren<TvGrid>();
-            TvGrid[] tga = new TvGrid[horizontalCount];
-            int ri = 0;
-            foreach (TvGrid tg in tgs) {
-                tga[ri++] = tg;
-                if (ri >= horizontalCount) {
+            horizontalCount = horizontalCount > tgs.Length ? tgs.Length : horizontalCount;
+            List<TvGrid> tga = new List<TvGrid>();
+            for (int i = 0; i < tgs.Length; i++) {
+                TvGrid tg = tgs[i];
+                tga.Add(tg);
+                if (tga.Count >= horizontalCount || i == tgs.Length - 1) {
                     gridMtx.Add(tga);
-                    ri = 0;
-                    tga = new TvGrid[horizontalCount];
+                    tga = new List<TvGrid>();
                 }
                 tg.showSelected(false);
             }
-            showCurrentSelected(true);
+
         }
 
         private int getRowCount() {
+            if (gameObject.name.Equals("TeacherSelect")) {
+                Debug.Log("Test");
+            }
             float t_s = rectTram.rect.width - gridLayout.spacing.x;
             float wPluss = gridLayout.cellSize.x + gridLayout.spacing.x;
             return Convert.ToInt16(Math.Floor(t_s / wPluss));
@@ -61,14 +82,17 @@ namespace TVController {
                 moveSelect(d);
                 return false;
             } catch (Exception e) {
-                if (!DirectionF.i(d).isVertical() && horizontalEndRepeatable) {
+                if (getNextTVBehaviourByDirection(d) != null) {
+                    currentIndex = orGLoc;
+                    return true;
+                } else if (!DirectionF.i(d).isVertical() && horizontalEndRepeatable) {
                     handleRepeatEnd(d);
                     return false;
                 } else if (DirectionF.i(d).isVertical() && verticalEndRepeatable) {
                     handleRepeatEnd(d);
                     return false;
                 } else {
-                    return handleOther(d, orGLoc, currentIndex) ;
+                    return handleOther(d, orGLoc, currentIndex);
                 }
             }
         }
@@ -82,13 +106,13 @@ namespace TVController {
         private void handleRepeatEnd(Direction d) {
             switch (d) {
                 case Direction.Down:
-                    currentIndex.y =0;
+                    currentIndex.y = 0;
                     break;
                 case Direction.Up:
-                    currentIndex.y = gridMtx.Count-1;
+                    currentIndex.y = gridMtx.Count - 1;
                     break;
                 case Direction.Left:
-                    currentIndex.x = horizontalCount -1;
+                    currentIndex.x = horizontalCount - 1;
                     break;
                 case Direction.Right:
                     currentIndex.x = 0;
@@ -135,7 +159,7 @@ namespace TVController {
         }
 
         public GridLoc getSize() {
-            return new GridLoc(gridMtx[0].Length, gridMtx.Count);
+            return new GridLoc(gridMtx[0].Count, gridMtx.Count);
         }
 
         public override void click() {

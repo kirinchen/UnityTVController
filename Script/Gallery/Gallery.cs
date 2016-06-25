@@ -13,6 +13,7 @@ public class Gallery : MonoBehaviour {
 
     void Awake() {
         rectTran = GetComponent<RectTransform>();
+        
         leftStopX = 0;
         rightStopX = - (contents.Length-1) * rectTran.rect.width;
     }
@@ -34,8 +35,9 @@ public class Gallery : MonoBehaviour {
         }
         t.transform.parent = transform;
         t.localScale = new Vector3(1, 1, 1);
-        t.offsetMax = Vector2.zero;
-        t.offsetMin = Vector2.zero;
+        t.localPosition = Vector3.zero;
+       // t.offsetMax = Vector2.zero;
+        //t.offsetMin = Vector2.zero;
         t.anchoredPosition = new Vector2(posX, 0);
         return t;
     }
