@@ -13,7 +13,7 @@ public class TestTvGrid : TvGrid {
     }
 
     public override void showSelected(bool b) {
-        img.color = b ? Color.green : Color.blue;
+        img.color = b ? Color.grey : Color.white;
     }
 
     public override void click() {

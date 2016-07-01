@@ -5,8 +5,14 @@ using System;
 namespace TVController {
     public class TVSystem : MonoBehaviour {
 
+        private static TVSystem instance = null;
+
         public TVBehaviour currentItem;
         private bool _moveing = false;
+
+        void Awake() {
+            instance = this;
+        }
 
         void Start() {
             setInitTvView();
@@ -60,16 +66,19 @@ namespace TVController {
             }
         }
 
-        internal void changeFocus(TVBehaviour nextF) {
+        public void changeFocus(TVBehaviour nextF) {
             currentItem.onLeaveFocus(() => {
                 currentItem.focus(false);
             });
+            currentItem = nextF;
             nextF.onFocus(() => {
                 nextF.focus(true);
             });
-            currentItem = nextF;
         }
 
+        public static TVSystem getInstance() {
+            return instance;
+        }
 
     }
 }

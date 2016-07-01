@@ -35,6 +35,10 @@ public class ViewPager : MonoBehaviour {
         return self.getChild(i);
     }
 
+    public Transform getCurrentView() {
+        return getPageView(currentIndex);
+    }
+
     private void sync() {
         float x = self.getPosXByPage(currentIndex);
         StartCoroutine(self.runShiftTo(x));
