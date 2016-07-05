@@ -48,9 +48,10 @@ namespace TVController {
             if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0) {
                 if (!_moveing) {
                     _moveing = true;
-                    TVBehaviour nextF = currentItem.getByDirection(getDirection(h, v));
+                    Direction d = getDirection(h, v);
+                    TVBehaviour nextF = currentItem.getByDirection(d);
                     if (nextF != null) {
-                        changeFocus(nextF);
+                        changeFocus(d,nextF);
                     }
                 }
             } else {
@@ -66,14 +67,14 @@ namespace TVController {
             }
         }
 
-        public void changeFocus(TVBehaviour nextF) {
+        public void changeFocus(Direction d, TVBehaviour nextF) {
             currentItem.onLeaveFocus(() => {
                 currentItem.focus(false);
             });
             currentItem = nextF;
             nextF.onFocus(() => {
                 nextF.focus(true);
-            });
+            },d);
         }
 
         public static TVSystem getInstance() {

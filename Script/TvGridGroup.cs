@@ -42,8 +42,8 @@ namespace TVController {
             }
         }*/
 
-        internal override void onFocus(Action focusAction) {
-            base.onFocus(focusAction);
+        internal override void onFocus(Action focusAction,Direction d) {
+            base.onFocus(focusAction,d);
             try {
                 showCurrentSelected(true);
             } catch (Exception e) {

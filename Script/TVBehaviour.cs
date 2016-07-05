@@ -59,7 +59,7 @@ namespace TVController {
             focused = b;
         }
 
-        internal virtual void onFocus(Action focusAction) {
+        internal virtual void onFocus(Action focusAction,Direction d ) {
             focusAction();
         }
     }
