@@ -10,6 +10,7 @@ public class TestTvGrid : TvGrid {
     public TabStyleSet unselectedStyle;
     private Image img;
     private Text text;
+    public Action onClick;
 
     void Awake() {
         img = GetComponent<Image>();
@@ -22,5 +23,8 @@ public class TestTvGrid : TvGrid {
     }
 
     public override void click() {
+        if (onClick != null) {
+            onClick();
+        }
     }
 }
